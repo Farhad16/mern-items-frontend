@@ -1,7 +1,7 @@
 import React from "react";
 
 function App() {
-  return <div className="App">Start app</div>;
+  return <div className="text-blue-700">Start app</div>;
 }
 
 export default App;
