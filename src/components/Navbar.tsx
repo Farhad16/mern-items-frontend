@@ -1,5 +1,5 @@
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
-import HdrAutoIcon from "@mui/icons-material/HdrAuto";
+import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import LoginIcon from "@mui/icons-material/Login";
 import LogoutIcon from "@mui/icons-material/Logout";
 import MenuIcon from "@mui/icons-material/Menu";
@@ -16,8 +16,7 @@ import { Link, NavLink } from "react-router-dom";
 
 const pages = [
   { name: "Home", link: "/" },
-  { name: "Course", link: "/course" },
-  { name: "Dashboard", link: "/dashboard" },
+  { name: "Items", link: "/items" },
 ];
 
 const Navbar = () => {
@@ -47,7 +46,7 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="bg-blue-400 py-4 sm:px-16 px-6">
+    <nav className="bg-gray-600 py-4 sm:px-16 px-6">
       <div className="container mx-auto flex justify-between items-center">
         <Box sx={{ flexGrow: 1 }} className="md:hidden flex">
           <IconButton
@@ -63,8 +62,8 @@ const Navbar = () => {
               to="/"
               className="text-white text-lg font-semibold flex items-center gap-2"
             >
-              <HdrAutoIcon />
-              <span>Alemeno</span>
+              <ShoppingCartIcon />
+              <span>Shopping</span>
             </Link>
           </IconButton>
           <Menu
@@ -97,7 +96,7 @@ const Navbar = () => {
             to="/"
             className="text-white text-lg font-semibold flex items-center gap-2"
           >
-            <HdrAutoIcon /> <span>Alemeno</span>
+            <ShoppingCartIcon /> <span>Shopping</span>
           </Link>
           <div className="space-x-4">
             {pages.map((page) => (
@@ -133,12 +132,15 @@ const Navbar = () => {
               </Link>
             )}
           </>
-          <Avatar
-            alt="User Avatar"
-            src={user?.photoURL || ""}
-            onClick={handleAvatarClick}
-            className="cursor-pointer"
-          />
+          {user && (
+            <Avatar
+              alt="User Avatar"
+              src={user?.photoURL || ""}
+              onClick={handleAvatarClick}
+              className="cursor-pointer"
+            />
+          )}
+
           <Popover
             id={id}
             open={open}

@@ -4,12 +4,13 @@ import Login from "../Login";
 import Register from "../Register";
 import Items from "../items";
 import PrivateRoute from "../PrivateRoute";
+import ErrorPage from "../ErrorPage";
 
 export const router = createBrowserRouter([
   {
     path: "/",
     element: <Layout />,
-    // errorElement: <ErrorPage />,
+    errorElement: <ErrorPage />,
     children: [
       {
         path: "login",
