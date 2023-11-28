@@ -1,10 +1,10 @@
-import React, { useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import DataTable from "./DataTable";
 import { columnData, data } from "../../utils/static.data";
+import SearchIcon from "@mui/icons-material/Search";
 
 function Items() {
   const [searchKey, setSearchKey] = useState("");
-  const [itemsPerPage, setItemsPerPage] = useState(10);
 
   const columns: any = useMemo(() => columnData, []);
 
@@ -28,33 +28,30 @@ function Items() {
   }, [searchKey]);
 
   return (
-    <div className="w-full min-h-screen overflow-hidden p-6 flex flex-col gap-4">
-      <div className="flex flex-col sm:flex-row gap-8">
-        <input
-          type="text"
-          onChange={handleChange}
-          className="bg-white bg-opacity-10 border-none text-white px-3 pt-2 pb-3 rounded-lg"
-          placeholder="Search..."
-        />
-        <div className="flex flex-row items-center gap-4">
-          <span className="text-base text-white">Entities: </span>
-          <select
-            name="entities"
-            id=""
-            onChange={(e) => setItemsPerPage(Number(e.target.value))}
-            className="bg-[#0f172a] bg-opacity-30 border text-white px-3 pt-2 pb-3 rounded-lg"
-            value={itemsPerPage}
-          >
-            <option value="5">5</option>
-            <option value="10">10</option>
-            <option value="15">15</option>
-            <option value="20">20</option>
-            <option value="25">25</option>
-          </select>
+    <div className="w-full min-h-screen overflow-hidden py-8 flex flex-col gap-4 items-center">
+      <div className="flex items-center justify-between gap-4 w-full">
+        <div className="relative w-1/2">
+          <input
+            type="text"
+            onChange={handleChange}
+            className="bg-gray-100 focus:outline-none px-3 pt-2 pb-3 rounded-lg pl-10 w-full border text-black border-gray-500 placeholder:text-black"
+            placeholder="Search..."
+          />
+          <SearchIcon className="absolute top-3 left-3 text-black" />
         </div>
+        <button
+          type="submit"
+          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-md focus:outline-none focus:shadow-outline"
+        >
+          Create
+        </button>
       </div>
 
-      <DataTable data={filterData} columns={columns} />
+      {filterData.length > 0 ? (
+        <DataTable data={filterData} columns={columns} />
+      ) : (
+        <p className="text-lg text-black">No results found</p>
+      )}
     </div>
   );
 }
