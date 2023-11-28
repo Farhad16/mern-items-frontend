@@ -1,8 +1,10 @@
+import React from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { LoginSchema } from "../lib/validation";
 import { Link } from "react-router-dom";
+import { loginUser } from "../utils/api";
 
 const Login = () => {
   const {
@@ -18,7 +20,18 @@ const Login = () => {
   });
 
   const onSubmit = async (values: any) => {
-    console.log(values);
+    const formData = {
+      email: values.email,
+      password: values.password,
+    };
+    try {
+      const response = await loginUser(formData);
+      console.log(response);
+      // Handle success, store token, redirect, show message, etc.
+    } catch (error) {
+      console.error("Error logging in:", error);
+      // Handle error, show message, etc.
+    }
   };
 
   return (

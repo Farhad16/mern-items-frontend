@@ -6,6 +6,7 @@ import { RegisterSchema } from "../lib/validation";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import { Link } from "react-router-dom";
+import { registerUser } from "../utils/api";
 
 const RegisterPage = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -26,9 +27,7 @@ const RegisterPage = () => {
     },
   });
 
-  const onSubmit = (data: any) => {
-    // Handle registration logic here
-    console.log("Registration data:", data);
+  const onSubmit = async (data: any) => {
     const password = data.password;
     const confirmPassword = data.confirmPassword;
 
@@ -38,6 +37,20 @@ const RegisterPage = () => {
         message: "Passwords do not match",
       });
       return;
+    } else {
+      const formData = {
+        name: data.name,
+        email: data.email,
+        password: data.password,
+      };
+      try {
+        const response = await registerUser(formData);
+        console.log(response);
+        // Handle success, redirect, show message, etc.
+      } catch (error) {
+        console.error("Error registering user:", error);
+        // Handle error, show message, etc.
+      }
     }
   };
 

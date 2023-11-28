@@ -1,3 +1,4 @@
+import React from "react";
 import { createBrowserRouter } from "react-router-dom";
 import Layout from "../Layout";
 import Login from "../Login";
@@ -13,17 +14,20 @@ export const router = createBrowserRouter([
     errorElement: <ErrorPage />,
     children: [
       {
+        path: "",
+        element: <Items />,
+      },
+      {
+        path: "items",
+        element: <Items />,
+      },
+      {
         path: "login",
         element: <Login />,
       },
       {
         path: "register",
         element: <Register />,
-      },
-      {
-        path: "items",
-        // element: <PrivateRoute element={<Items />} />,
-        element: <Items />,
       },
     ],
   },
