@@ -17,36 +17,27 @@ const DataTable: React.FC<TableProps> = ({ data, columns }) => {
       },
       useSortBy
     );
-
   return (
     <div className="w-full overflow-x-auto mt-6">
       <table
         {...getTableProps()}
-        className="w-full rounded-xl text-black font-normal"
+        className="w-full bg-[#0f172a] rounded-xl text-white font-normal"
       >
         <thead>
-          {headerGroups.map((headerGroup: any, groupIndex: number) => (
-            <tr
-              {...headerGroup.getHeaderGroupProps()}
-              className="table-row"
-              key={groupIndex}
-            >
+          {headerGroups.map((headerGroup: any) => (
+            <tr {...headerGroup.getHeaderGroupProps()} className="table-row ">
               {headerGroup.headers.map((column: any, colIndex: number) => (
                 <th
-                  {...column.getHeaderProps(
-                    column.getSortByToggleProps({
-                      onClick: (e: React.MouseEvent) => {
-                        // If it's the last column, prevent sorting
-                        if (colIndex === headerGroup.headers.length - 1) {
-                          e.stopPropagation();
-                        }
-                      },
-                    })
-                  )}
+                  {...column.getHeaderProps(column.getSortByToggleProps())}
                   className="table-header text-left p-3 pl-4"
-                  key={colIndex}
                 >
-                  <div className="flex justify-between items-center">
+                  <div
+                    className={`${
+                      colIndex === headerGroup.headers.length - 1
+                        ? "flex items-center justify-center"
+                        : "flex items-center justify-between"
+                    }`}
+                  >
                     <span>{column.render("Header")}</span>
                     {colIndex !== headerGroup.headers.length - 1 && (
                       <div className="block w-6">
@@ -63,25 +54,21 @@ const DataTable: React.FC<TableProps> = ({ data, columns }) => {
                       </div>
                     )}
                   </div>
+                  <div>{column.canFilter ? column.render("Filter") : null}</div>
                 </th>
               ))}
             </tr>
           ))}
         </thead>
         <tbody {...getTableBodyProps()} className="table-body">
-          {rows.map((row: any, rowIndex: number) => {
+          {rows.map((row: any) => {
             prepareRow(row);
             return (
-              <tr
-                {...row.getRowProps()}
-                className="table-row text-left"
-                key={rowIndex}
-              >
-                {row.cells.map((cell: any, cellIndex: number) => (
+              <tr {...row.getRowProps()} className="table-row text-left ">
+                {row.cells.map((cell: any) => (
                   <td
                     {...cell.getCellProps()}
                     className="table-cell p-3 pl-4 border-t border-[#304465]"
-                    key={cellIndex}
                   >
                     {cell.render("Cell")}
                   </td>

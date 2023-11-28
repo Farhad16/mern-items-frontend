@@ -46,7 +46,7 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="bg-gray-900 py-4 sm:px-16 px-6">
+    <nav className="bg-slate-600 py-4 sm:px-16 px-6">
       <div className="container mx-auto flex justify-between items-center">
         <Box sx={{ flexGrow: 1 }} className="md:hidden flex">
           <IconButton

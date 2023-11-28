@@ -10,7 +10,7 @@ const pages = [
 
 const Footer = () => {
   return (
-    <footer className="bg-gray-900 py-4 text-white sm:px-16 px-6 flex sm:flex-row flex-col items-center">
+    <footer className="bg-slate-600 py-4 text-white sm:px-16 px-6 flex sm:flex-row flex-col items-center">
       <div className="flex flex-row items-center gap-3 sm:gap-4 flex-1">
         <div className="flex items-center">
           <ShoppingCart fontSize="large" />
