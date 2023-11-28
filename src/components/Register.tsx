@@ -5,10 +5,15 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { RegisterSchema } from "../lib/validation";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
-import { Link } from "react-router-dom";
 import { registerUser } from "../utils/api";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+import { simplifyError } from "../utils/error.util";
 
 const RegisterPage = () => {
+  const location = useLocation();
+  const history = useNavigate();
+
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
@@ -45,11 +50,20 @@ const RegisterPage = () => {
       };
       try {
         const response = await registerUser(formData);
-        console.log(response);
-        // Handle success, redirect, show message, etc.
-      } catch (error) {
-        console.error("Error registering user:", error);
-        // Handle error, show message, etc.
+        toast.success("Registration success", {
+          position: "top-right",
+          autoClose: 3000,
+        });
+        if (response) {
+          const redirectUrl = location.state?.from || "/";
+          history(redirectUrl);
+        }
+      } catch (error: any) {
+        const err = simplifyError(error);
+        toast.error(err, {
+          position: "top-right",
+          autoClose: 3000,
+        });
       }
     }
   };
@@ -158,7 +172,7 @@ const RegisterPage = () => {
       <div className="flex items-center justify-between">
         <button
           type="submit"
-          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded focus:outline-none focus:shadow-outline"
+          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded focus:outline-none outline-none"
         >
           Register
         </button>

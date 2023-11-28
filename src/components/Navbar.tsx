@@ -12,7 +12,7 @@ import MenuItem from "@mui/material/MenuItem";
 import Popover from "@mui/material/Popover";
 import Typography from "@mui/material/Typography";
 import React, { useState } from "react";
-import { Link, NavLink } from "react-router-dom";
+import { Link, NavLink, useLocation } from "react-router-dom";
 
 const pages = [
   { name: "Home", link: "/" },
@@ -23,6 +23,8 @@ const Navbar = () => {
   const [anchorEl, setAnchorEl] = useState(null);
   const userString = localStorage.getItem("user");
   const user = userString ? JSON.parse(userString) : null;
+
+  const location = useLocation();
 
   const handleAvatarClick = (event: any) => {
     setAnchorEl(event.currentTarget);
@@ -124,12 +126,23 @@ const Navbar = () => {
                 Logout
               </p>
             ) : (
-              <Link
-                className="ml-4 flex gap-2 items-center cursor-pointer font-semibold text-white"
-                to="/login"
-              >
-                Login
-              </Link>
+              <div className="flex items-center text-white font-semibold gap-1">
+                <Link
+                  className="cursor-pointer text-white"
+                  to="/login"
+                  state={{ from: location.pathname }}
+                >
+                  Login
+                </Link>
+                <span> / </span>
+                <Link
+                  className="cursor-pointer text-white"
+                  to="/register"
+                  state={{ from: location.pathname }}
+                >
+                  Register
+                </Link>
+              </div>
             )}
           </>
           {user && (
@@ -178,12 +191,21 @@ const Navbar = () => {
                   Logout
                 </p>
               ) : (
-                <Link
-                  className="text-sm flex gap-2 items-center cursor-pointer"
-                  to="/login"
-                >
-                  <LoginIcon /> Login
-                </Link>
+                <>
+                  <Link
+                    className="text-sm flex gap-2 items-center cursor-pointer"
+                    to="/login"
+                  >
+                    <LoginIcon /> Login
+                  </Link>
+                  {" / "}
+                  <Link
+                    className="text-sm flex gap-2 items-center cursor-pointer"
+                    to="/register"
+                  >
+                    <LoginIcon /> Register
+                  </Link>
+                </>
               )}
             </div>
           </Popover>

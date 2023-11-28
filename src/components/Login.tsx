@@ -5,8 +5,14 @@ import { z } from "zod";
 import { LoginSchema } from "../lib/validation";
 import { Link } from "react-router-dom";
 import { loginUser } from "../utils/api";
+import { useLocation, useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+import { simplifyError } from "../utils/error.util";
 
 const Login = () => {
+  const location = useLocation();
+  const history = useNavigate();
+
   const {
     register,
     handleSubmit,
@@ -26,11 +32,20 @@ const Login = () => {
     };
     try {
       const response = await loginUser(formData);
-      console.log(response);
-      // Handle success, store token, redirect, show message, etc.
+      toast.success("Login success", {
+        position: "top-right",
+        autoClose: 3000,
+      });
+      if (response) {
+        const redirectUrl = location.state?.from || "/";
+        history(redirectUrl);
+      }
     } catch (error) {
-      console.error("Error logging in:", error);
-      // Handle error, show message, etc.
+      const err = simplifyError(error);
+      toast.error(err, {
+        position: "top-right",
+        autoClose: 3000,
+      });
     }
   };
 

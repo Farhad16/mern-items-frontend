@@ -1,12 +1,14 @@
 import axios from "axios";
+import Cookies from "js-cookie";
 
 const API_BASE_URL = "http://localhost:4200/api/auth";
 
 export const registerUser = async (userData: any) => {
   try {
     const response = await axios.post(`${API_BASE_URL}/register`, userData);
+    Cookies.set("token", response.data.token, { expires: 7 });
     return response.data;
-  } catch (error) {
+  } catch (error: any) {
     throw error;
   }
 };
@@ -14,8 +16,9 @@ export const registerUser = async (userData: any) => {
 export const loginUser = async (userData: any) => {
   try {
     const response = await axios.post(`${API_BASE_URL}/login`, userData);
+    Cookies.set("token", response.data.token, { expires: 7 });
     return response.data;
-  } catch (error) {
+  } catch (error: any) {
     throw error;
   }
 };
