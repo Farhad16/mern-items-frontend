@@ -1,11 +1,11 @@
 // TableActions.js
-import { Typography, Button } from "@mui/material";
-import React, { useState } from "react";
-import ReusableModal from "./ReusableModal";
+import { Button, Typography } from "@mui/material";
+import { useState } from "react";
+import { toast } from "react-toastify";
 import { deleteItem, updateItem } from "../../apis/items.api";
 import { useAuth } from "../../components/auth/AuthContext";
-import { toast } from "react-toastify";
 import { simplifyError } from "../../utils/error.util";
+import ReusableModal from "./ReusableModal";
 
 const TableActions = ({ row }: any) => {
   const { user } = useAuth();

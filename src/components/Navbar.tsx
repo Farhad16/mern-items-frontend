@@ -11,10 +11,7 @@ import React, { useState } from "react";
 import { Link, NavLink, useLocation } from "react-router-dom";
 import { useAuth } from "./auth/AuthContext";
 
-const pages = [
-  { name: "Home", link: "/" },
-  { name: "Items", link: "/items" },
-];
+const pages = [{ name: "Items", link: "/items" }];
 
 const Navbar = () => {
   const [anchorEl, setAnchorEl] = useState(null);

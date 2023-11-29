@@ -86,7 +86,7 @@ function Items() {
   }, [searchKey, itemData]);
 
   return (
-    <div className="w-full min-h-screen overflow-hidden py-8 flex flex-col gap-4 items-center">
+    <div className="w-full overflow-hidden py-8 flex flex-col gap-4 items-center">
       <div className="flex items-center justify-between gap-4 w-full">
         <div className="relative w-1/2">
           <input
@@ -102,7 +102,7 @@ function Items() {
           onClick={handleCreateClick}
           className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-md focus:outline-none focus:shadow-outline"
         >
-          Create Item
+          Create
         </button>
       </div>
 

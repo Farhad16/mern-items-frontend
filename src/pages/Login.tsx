@@ -1,14 +1,12 @@
-import React from "react";
-import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
-import { LoginSchema } from "../lib/validation";
-import { Link } from "react-router-dom";
-import { loginUser } from "../apis/auth.api";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useForm } from "react-hook-form";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import { simplifyError } from "../utils/error.util";
+import { z } from "zod";
+import { loginUser } from "../apis/auth.api";
 import { useAuth } from "../components/auth/AuthContext";
+import { LoginSchema } from "../lib/validation";
+import { simplifyError } from "../utils/error.util";
 
 const Login = () => {
   const location = useLocation();

@@ -1,12 +1,8 @@
-import React from "react";
+import ShoppingCart from "@mui/icons-material/ShoppingCart";
 import Typography from "@mui/material/Typography";
 import { Link } from "react-router-dom";
-import ShoppingCart from "@mui/icons-material/ShoppingCart";
 
-const pages = [
-  { name: "Home", link: "/" },
-  { name: "Items", link: "/items" },
-];
+const pages = [{ name: "Items", link: "/items" }];
 
 const Footer = () => {
   return (

@@ -1,6 +1,5 @@
-import React from "react";
-import { Typography, Box } from "@mui/material";
 import SentimentVeryDissatisfiedIcon from "@mui/icons-material/SentimentVeryDissatisfied";
+import { Box, Typography } from "@mui/material";
 
 const ErrorPage = () => {
   return (

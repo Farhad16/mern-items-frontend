@@ -1,15 +1,15 @@
 // RegisterPage.js
-import React, { useState } from "react";
-import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { RegisterSchema } from "../lib/validation";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
-import { registerUser } from "../apis/auth.api";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import { simplifyError } from "../utils/error.util";
+import { registerUser } from "../apis/auth.api";
 import { useAuth } from "../components/auth/AuthContext";
+import { RegisterSchema } from "../lib/validation";
+import { simplifyError } from "../utils/error.util";
 
 const RegisterPage = () => {
   const location = useLocation();
