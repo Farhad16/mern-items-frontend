@@ -18,7 +18,6 @@ const DataTable: React.FC<TableProps> = ({ data, columns }) => {
       useSortBy
     );
 
-  console.log("columns", columns);
   return (
     <div className="w-full overflow-x-auto mt-6">
       <table

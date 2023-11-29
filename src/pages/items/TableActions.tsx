@@ -3,8 +3,14 @@ import MoreVertIcon from "@mui/icons-material/MoreVert";
 import { Menu, MenuItem, Typography } from "@mui/material";
 import React, { useState } from "react";
 import ReusableModal from "./ReusableModal";
+import { updateItem } from "../../apis/items.api";
+import { useAuth } from "../../components/auth/AuthContext";
+import { toast } from "react-toastify";
+import { simplifyError } from "../../utils/error.util";
 
 const TableActions = ({ row }: any) => {
+  const { user } = useAuth();
+
   const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(
     null
   );
@@ -36,9 +42,30 @@ const TableActions = ({ row }: any) => {
     setDeleteModalOpen(false);
   };
 
-  const handleEditConfirm = () => {
-    // Add your edit logic here with the editedName
-    setEditModalOpen(false);
+  const handleEditConfirm = async () => {
+    try {
+      const editedData = {
+        name: editedName,
+        created_by: user?.email || "",
+      };
+
+      const updatedItem = await updateItem(row.original._id, editedData);
+
+      if (updatedItem) {
+        toast.success("Item created successfully", {
+          position: "top-right",
+          autoClose: 2000,
+        });
+      }
+    } catch (err) {
+      const error = simplifyError(err);
+      toast.success(error, {
+        position: "top-right",
+        autoClose: 2000,
+      });
+    } finally {
+      setEditModalOpen(false);
+    }
   };
 
   return (
@@ -88,7 +115,7 @@ const TableActions = ({ row }: any) => {
             <input
               type="text"
               id="name"
-              value={editedName}
+              defaultValue={row.original.name}
               onChange={(e) => setEditedName(e.target.value)}
               className="mt-2 w-full px-4 py-3 border rounded-md border-gray-300 focus:outline-none focus:ring-1 focus:border-blue-300"
             />

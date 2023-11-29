@@ -48,7 +48,7 @@ function Items() {
   const handleCreateConfirm = async () => {
     const data = {
       name: itemName,
-      created_by: user?.email,
+      created_by: user?.email || "",
     };
     try {
       const response = await createItem(data);
