@@ -1,24 +1,36 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import DataTable from "./DataTable";
 import SearchIcon from "@mui/icons-material/Search";
-import { columnData, data } from "./dummy.data";
 import ReusableModal from "./ReusableModal";
-import { createItem } from "../../apis/items.api";
+import { createItem, getAllItems } from "../../apis/items.api";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../components/auth/AuthContext";
 import { toast } from "react-toastify";
 import { simplifyError } from "../../utils/error.util";
+import { columnData } from "./dummy.data";
 
 function Items() {
   const [searchKey, setSearchKey] = useState("");
   const [itemName, setItemName] = useState("");
   const [createModalOpen, setCreateModalOpen] = useState(false);
+
+  const [itemData, setItemData] = useState([null]);
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  async function fetchData() {
+    const data = await getAllItems();
+    setItemData(data);
+  }
+
   const { user } = useAuth();
   const navigate = useNavigate();
 
   const columns: any = useMemo(() => columnData, []);
 
-  const handleChange = (e: any) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchKey(e.target.value);
   };
 
@@ -45,6 +57,7 @@ function Items() {
           position: "top-right",
           autoClose: 2000,
         });
+        fetchData();
       }
     } catch (err) {
       const error = simplifyError(err);
@@ -59,7 +72,7 @@ function Items() {
 
   const filterData: any = useMemo(() => {
     const searchTerm = searchKey.toLowerCase().trim();
-    return data.filter((item: any) => {
+    return itemData.filter((item: any) => {
       for (let key in item) {
         if (
           typeof item[key] === "string" &&
@@ -70,7 +83,7 @@ function Items() {
       }
       return false;
     });
-  }, [searchKey]);
+  }, [searchKey, itemData]);
 
   return (
     <div className="w-full min-h-screen overflow-hidden py-8 flex flex-col gap-4 items-center">

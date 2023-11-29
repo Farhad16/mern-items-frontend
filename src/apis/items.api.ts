@@ -13,7 +13,7 @@ export const createItem = async (itemData: any) => {
 
 export const getAllItems = async () => {
   try {
-    const response = await axios.post(`${API_BASE_URL}/getItems`);
+    const response = await axios.get(`${API_BASE_URL}/getItems`);
     return response.data;
   } catch (err) {
     throw err;

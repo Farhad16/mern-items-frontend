@@ -17,11 +17,13 @@ const DataTable: React.FC<TableProps> = ({ data, columns }) => {
       },
       useSortBy
     );
+
+  console.log("columns", columns);
   return (
     <div className="w-full overflow-x-auto mt-6">
       <table
         {...getTableProps()}
-        className="w-full bg-[#0f172a] rounded-xl text-white font-normal"
+        className="w-full bg-[#0f172a] rounded-xl text-white font-normal text-sm"
       >
         <thead>
           {headerGroups.map((headerGroup: any) => (
