@@ -1,5 +1,4 @@
 // AuthContext.ts
-import Cookies from "js-cookie";
 import {
   createContext,
   useContext,
@@ -31,11 +30,11 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
 
   useEffect(() => {
-    const userFromCookies = Cookies.get("user");
-    if (userFromCookies) {
-      setUser(JSON.parse(userFromCookies));
+    const userFromLocalStorage = localStorage.getItem("user");
+    if (userFromLocalStorage) {
+      setUser(JSON.parse(userFromLocalStorage));
     }
-  }, []);
+  }, []); // Dependency array is empty, so this effect runs once on mount
 
   return (
     <AuthContext.Provider value={{ user, setUser }}>

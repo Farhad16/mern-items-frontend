@@ -9,10 +9,12 @@ import { registerUser } from "../apis/auth.api";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { simplifyError } from "../utils/error.util";
+import { useAuth } from "../components/auth/AuthContext";
 
 const RegisterPage = () => {
   const location = useLocation();
   const history = useNavigate();
+  const { setUser } = useAuth();
 
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
@@ -50,6 +52,7 @@ const RegisterPage = () => {
       };
       try {
         const response = await registerUser(formData);
+        setUser(response.user);
         toast.success("Registration success", {
           position: "top-right",
           autoClose: 3000,

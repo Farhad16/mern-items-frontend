@@ -9,7 +9,6 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { simplifyError } from "../utils/error.util";
 import { useAuth } from "../components/auth/AuthContext";
-import { getUser } from "../utils/getUser";
 
 const Login = () => {
   const location = useLocation();
@@ -39,8 +38,8 @@ const Login = () => {
         position: "top-right",
         autoClose: 2000,
       });
-      const user = getUser();
-      setUser(user);
+
+      setUser(response.user);
       if (response) {
         const redirectUrl = location.state?.from || "/";
         history(redirectUrl);

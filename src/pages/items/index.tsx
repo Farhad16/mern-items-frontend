@@ -4,14 +4,16 @@ import SearchIcon from "@mui/icons-material/Search";
 import { columnData, data } from "./dummy.data";
 import ReusableModal from "./ReusableModal";
 import { createItem } from "../../apis/items.api";
-import { getUser } from "../../utils/getUser";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../../components/auth/AuthContext";
+import { toast } from "react-toastify";
+import { simplifyError } from "../../utils/error.util";
 
 function Items() {
   const [searchKey, setSearchKey] = useState("");
   const [itemName, setItemName] = useState("");
   const [createModalOpen, setCreateModalOpen] = useState(false);
-  const user = getUser();
+  const { user } = useAuth();
   const navigate = useNavigate();
 
   const columns: any = useMemo(() => columnData, []);
@@ -21,6 +23,7 @@ function Items() {
   };
 
   const handleCreateClick = () => {
+    console.log(user);
     if (!user) {
       // If user is not logged in, navigate to the login page
       navigate("/login");
@@ -33,12 +36,25 @@ function Items() {
   const handleCreateConfirm = async () => {
     const data = {
       name: itemName,
-      created_by: user.name,
+      created_by: user?.email,
     };
-    const item = await createItem(data);
-    console.log(item);
-    // Additional logic after creating item if needed
-    setCreateModalOpen(false);
+    try {
+      const response = await createItem(data);
+      if (response) {
+        toast.success("Item created successfully", {
+          position: "top-right",
+          autoClose: 2000,
+        });
+      }
+    } catch (err) {
+      const error = simplifyError(err);
+      toast.success(error, {
+        position: "top-right",
+        autoClose: 2000,
+      });
+    } finally {
+      setCreateModalOpen(false);
+    }
   };
 
   const filterData: any = useMemo(() => {
@@ -73,7 +89,7 @@ function Items() {
           onClick={handleCreateClick}
           className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-md focus:outline-none focus:shadow-outline"
         >
-          Create
+          Create Item
         </button>
       </div>
 
@@ -83,7 +99,7 @@ function Items() {
         <p className="text-lg text-white">No results found</p>
       )}
       <ReusableModal
-        title="Create"
+        title="Create new item"
         content={
           <>
             <label
@@ -103,7 +119,7 @@ function Items() {
         open={createModalOpen}
         onClose={() => setCreateModalOpen(false)}
         onSuccess={handleCreateConfirm}
-        btnText="Edit"
+        btnText="Create"
       />
     </div>
   );
