@@ -4,14 +4,17 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { LoginSchema } from "../lib/validation";
 import { Link } from "react-router-dom";
-import { loginUser } from "../utils/api";
+import { loginUser } from "../apis/auth.api";
 import { useLocation, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { simplifyError } from "../utils/error.util";
+import { useAuth } from "../components/auth/AuthContext";
+import { getUser } from "../utils/getUser";
 
 const Login = () => {
   const location = useLocation();
   const history = useNavigate();
+  const { setUser } = useAuth();
 
   const {
     register,
@@ -34,8 +37,10 @@ const Login = () => {
       const response = await loginUser(formData);
       toast.success("Login success", {
         position: "top-right",
-        autoClose: 3000,
+        autoClose: 2000,
       });
+      const user = getUser();
+      setUser(user);
       if (response) {
         const redirectUrl = location.state?.from || "/";
         history(redirectUrl);
@@ -44,7 +49,7 @@ const Login = () => {
       const err = simplifyError(error);
       toast.error(err, {
         position: "top-right",
-        autoClose: 3000,
+        autoClose: 2000,
       });
     }
   };

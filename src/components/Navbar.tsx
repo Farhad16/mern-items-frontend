@@ -1,9 +1,5 @@
-import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
-import LoginIcon from "@mui/icons-material/Login";
-import LogoutIcon from "@mui/icons-material/Logout";
 import MenuIcon from "@mui/icons-material/Menu";
-import SettingsIcon from "@mui/icons-material/Settings";
 import Avatar from "@mui/material/Avatar";
 import Box from "@mui/material/Box";
 import IconButton from "@mui/material/IconButton";
@@ -13,6 +9,7 @@ import Popover from "@mui/material/Popover";
 import Typography from "@mui/material/Typography";
 import React, { useState } from "react";
 import { Link, NavLink, useLocation } from "react-router-dom";
+import { useAuth } from "./auth/AuthContext";
 
 const pages = [
   { name: "Home", link: "/" },
@@ -21,8 +18,7 @@ const pages = [
 
 const Navbar = () => {
   const [anchorEl, setAnchorEl] = useState(null);
-  const userString = localStorage.getItem("user");
-  const user = userString ? JSON.parse(userString) : null;
+  const { user, setUser } = useAuth();
 
   const location = useLocation();
 
@@ -45,6 +41,10 @@ const Navbar = () => {
 
   const handleCloseNavMenu = () => {
     setAnchorElNav(null);
+  };
+
+  const handleLogout = () => {
+    setUser(null);
   };
 
   return (
@@ -118,14 +118,7 @@ const Navbar = () => {
         </div>
         <div className="flex items-center gap-4">
           <>
-            {user ? (
-              <p
-                className="ml-4 flex gap-2 items-center cursor-pointer font-semibold text-white"
-                onClick={() => {}}
-              >
-                Logout
-              </p>
-            ) : (
+            {!user && (
               <div className="flex items-center text-white font-semibold gap-1">
                 <Link
                   className="cursor-pointer text-white"
@@ -146,12 +139,22 @@ const Navbar = () => {
             )}
           </>
           {user && (
-            <Avatar
-              alt="User Avatar"
-              src={user?.photoURL || ""}
-              onClick={handleAvatarClick}
-              className="cursor-pointer"
-            />
+            <>
+              <p
+                className="text-sm flex text-white items-center cursor-pointer"
+                onClick={handleLogout}
+              >
+                Logout
+              </p>
+              <Avatar
+                alt="User Avatar"
+                onClick={handleAvatarClick}
+                className="cursor-pointer"
+                sx={{ background: "#1183e5" }}
+              >
+                {user.name.charAt(0).toUpperCase()}
+              </Avatar>
+            </>
           )}
 
           <Popover
@@ -174,38 +177,6 @@ const Navbar = () => {
                   <p className="font-medium">{user?.name}</p>
                   <p className="text-xs opacity-50">{user?.email}</p>
                 </div>
-              )}
-              <p className="text-sm flex gap-2 items-center cursor-pointer">
-                <AccountCircleIcon />
-                Profile
-              </p>
-              <p className="text-sm flex gap-2 items-center cursor-pointer">
-                <SettingsIcon /> Settings
-              </p>
-              {user ? (
-                <p
-                  className="text-sm flex gap-2 items-center cursor-pointer"
-                  onClick={() => {}}
-                >
-                  <LogoutIcon />
-                  Logout
-                </p>
-              ) : (
-                <>
-                  <Link
-                    className="text-sm flex gap-2 items-center cursor-pointer"
-                    to="/login"
-                  >
-                    <LoginIcon /> Login
-                  </Link>
-                  {" / "}
-                  <Link
-                    className="text-sm flex gap-2 items-center cursor-pointer"
-                    to="/register"
-                  >
-                    <LoginIcon /> Register
-                  </Link>
-                </>
               )}
             </div>
           </Popover>

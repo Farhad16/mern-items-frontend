@@ -3,10 +3,10 @@ import React from "react";
 import { Navigate } from "react-router-dom";
 
 interface PrivateRouteProps {
-  element: React.ReactNode;
+  children: React.ReactNode;
 }
 
-const PrivateRoute: React.FC<PrivateRouteProps> = ({ element }) => {
+const PrivateRoute: React.FC<PrivateRouteProps> = ({ children }) => {
   const userString = localStorage.getItem("user");
   const intendedRoute = localStorage.getItem("intendedRoute");
 
@@ -26,7 +26,7 @@ const PrivateRoute: React.FC<PrivateRouteProps> = ({ element }) => {
   }
 
   // If authenticated and no intended route, show the element
-  return <>{element}</>;
+  return <>{children}</>;
 };
 
 export default PrivateRoute;
