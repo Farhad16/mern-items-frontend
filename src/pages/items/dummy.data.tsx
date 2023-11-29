@@ -44,7 +44,7 @@ export const columnData = [
     Header: "Action",
     Cell: ({ row }: any) => {
       return (
-        <div className="text-center">
+        <div className="flex items-start justify-center">
           <TableActions row={row} />
         </div>
       );

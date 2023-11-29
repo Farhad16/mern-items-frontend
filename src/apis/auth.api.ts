@@ -21,7 +21,3 @@ export const loginUser = async (userData: any) => {
     throw error;
   }
 };
-
-export const logout = () => {
-  localStorage.removeItem("user");
-};

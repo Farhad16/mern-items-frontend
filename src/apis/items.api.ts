@@ -36,3 +36,14 @@ export const updateItem = async (id: string, updatedData: IItem) => {
     throw err;
   }
 };
+
+export const deleteItem = async (id: string, created_by: string) => {
+  try {
+    await axios.delete(`${API_BASE_URL}/delete/${id}`, {
+      data: { created_by },
+    });
+    console.log("Item deleted successfully");
+  } catch (error) {
+    throw error;
+  }
+};

@@ -1,9 +1,8 @@
 // TableActions.js
-import MoreVertIcon from "@mui/icons-material/MoreVert";
-import { Menu, MenuItem, Typography } from "@mui/material";
+import { Typography, Button } from "@mui/material";
 import React, { useState } from "react";
 import ReusableModal from "./ReusableModal";
-import { updateItem } from "../../apis/items.api";
+import { deleteItem, updateItem } from "../../apis/items.api";
 import { useAuth } from "../../components/auth/AuthContext";
 import { toast } from "react-toastify";
 import { simplifyError } from "../../utils/error.util";
@@ -11,35 +10,35 @@ import { simplifyError } from "../../utils/error.util";
 const TableActions = ({ row }: any) => {
   const { user } = useAuth();
 
-  const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(
-    null
-  );
-
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [editModalOpen, setEditModalOpen] = useState(false);
   const [editedName, setEditedName] = useState(row.name);
 
-  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
-
   const handleDeleteClick = () => {
     setDeleteModalOpen(true);
-    handleClose();
   };
 
   const handleEditClick = () => {
     setEditModalOpen(true);
-    handleClose();
   };
 
-  const handleDeleteConfirm = () => {
-    // Add your delete logic here
-    setDeleteModalOpen(false);
+  const handleDeleteConfirm = async () => {
+    try {
+      const created_by = user?.email || " ";
+      await deleteItem(row.original._id, created_by);
+      toast.success("Item deleted successfully", {
+        position: "top-right",
+        autoClose: 2000,
+      });
+    } catch (error) {
+      const errorMessage = simplifyError(error);
+      toast.error(errorMessage, {
+        position: "top-right",
+        autoClose: 2000,
+      });
+    } finally {
+      setDeleteModalOpen(false);
+    }
   };
 
   const handleEditConfirm = async () => {
@@ -59,7 +58,7 @@ const TableActions = ({ row }: any) => {
       }
     } catch (err) {
       const error = simplifyError(err);
-      toast.success(error, {
+      toast.error(error, {
         position: "top-right",
         autoClose: 2000,
       });
@@ -70,27 +69,25 @@ const TableActions = ({ row }: any) => {
 
   return (
     <>
-      <button
-        onClick={handleClick}
-        className="w-9 h-9 rounded-full hover:bg-slate-700 transition duration-300 ease-in-out"
-      >
-        <MoreVertIcon style={{ color: "#FFFFFF" }} />
-      </button>
-
-      <Menu
-        id="basic-menu"
-        anchorEl={anchorEl}
-        open={Boolean(anchorEl)}
-        onClose={handleClose}
-        MenuListProps={{
-          "aria-labelledby": "basic-button",
-        }}
-      >
-        <MenuItem onClick={handleEditClick}>Edit</MenuItem>
-        <MenuItem onClick={handleDeleteClick} sx={{ color: "red" }}>
+      <div className="flex flex-row gap-2 items-center">
+        <Button
+          onClick={handleEditClick}
+          variant="outlined"
+          color="inherit"
+          className="mr-2"
+        >
+          Edit
+        </Button>
+        <Button
+          onClick={handleDeleteClick}
+          sx={{ color: "red" }}
+          variant="outlined"
+          color="inherit"
+          className="mr-2"
+        >
           Delete
-        </MenuItem>
-      </Menu>
+        </Button>
+      </div>
 
       <ReusableModal
         title="Delete"
@@ -110,7 +107,7 @@ const TableActions = ({ row }: any) => {
               htmlFor="name"
               className="block text-sm font-medium text-gray-700"
             >
-              Name
+              Item name
             </label>
             <input
               type="text"
