@@ -1,7 +1,7 @@
 // ReusableModal.js
-import React from "react";
-import { Modal, Button, IconButton, Typography } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
+import { Button, IconButton, Modal, Typography } from "@mui/material";
+import { ReactNode } from "react";
 
 const ReusableModal = ({
   title,
@@ -9,14 +9,14 @@ const ReusableModal = ({
   open,
   onClose,
   onSuccess,
-  btnText,
+  btnEl,
 }: {
   title: string;
-  content: React.ReactNode;
+  content: ReactNode;
   open: boolean;
   onClose: () => void;
   onSuccess: () => void;
-  btnText: string;
+  btnEl: ReactNode;
 }) => {
   return (
     <Modal
@@ -41,8 +41,13 @@ const ReusableModal = ({
           >
             Cancel
           </Button>
-          <Button onClick={onSuccess} variant="contained" color="primary">
-            {btnText}
+          <Button
+            onClick={onSuccess}
+            variant="contained"
+            color="primary"
+            className="!min-w-[90px] !min-h-[32px]"
+          >
+            {btnEl}
           </Button>
         </div>
       </div>

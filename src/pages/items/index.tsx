@@ -1,12 +1,14 @@
-import { useEffect, useMemo, useState } from "react";
-import DataTable from "./DataTable";
 import SearchIcon from "@mui/icons-material/Search";
-import ReusableModal from "./ReusableModal";
-import { createItem, getAllItems } from "../../apis/items.api";
+import CircularProgress from "@mui/material/CircularProgress";
+import { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../components/auth/AuthContext";
-import { toast } from "react-toastify";
-import { simplifyError } from "../../utils/error.util";
+import {
+  useItemCreateMutation,
+  useItemListQuery,
+} from "../../queries/item.queries";
+import DataTable from "./DataTable";
+import ReusableModal from "./ReusableModal";
 import { columnData } from "./dummy.data";
 
 function Items() {
@@ -14,16 +16,7 @@ function Items() {
   const [itemName, setItemName] = useState("");
   const [createModalOpen, setCreateModalOpen] = useState(false);
 
-  const [itemData, setItemData] = useState([null]);
-
-  useEffect(() => {
-    fetchData();
-  }, []);
-
-  async function fetchData() {
-    const data = await getAllItems();
-    setItemData(data);
-  }
+  const { data: itemData, isLoading, refetch } = useItemListQuery();
 
   const { user } = useAuth();
   const navigate = useNavigate();
@@ -35,40 +28,25 @@ function Items() {
   };
 
   const handleCreateClick = () => {
-    console.log(user);
     if (!user) {
-      // If user is not logged in, navigate to the login page
       navigate("/login");
     } else {
-      // If user is logged in, open the create modal
       setCreateModalOpen(true);
     }
   };
 
-  const handleCreateConfirm = async () => {
-    const data = {
-      name: itemName,
-      created_by: user?.email || "",
-    };
-    try {
-      const response = await createItem(data);
-      if (response) {
-        toast.success("Item created successfully", {
-          position: "top-right",
-          autoClose: 2000,
-        });
-        fetchData();
-      }
-    } catch (err) {
-      const error = simplifyError(err);
-      toast.success(error, {
-        position: "top-right",
-        autoClose: 2000,
-      });
-    } finally {
-      setCreateModalOpen(false);
-    }
+  const data = {
+    name: itemName,
+    created_by: user?.email || "",
   };
+
+  const { createItemMutation, isLoading: isCreateLoading } =
+    useItemCreateMutation(data, {
+      onSuccess: () => {
+        setCreateModalOpen(false);
+        refetch();
+      },
+    });
 
   const filterData: any = useMemo(() => {
     const searchTerm = searchKey.toLowerCase().trim();
@@ -106,7 +84,9 @@ function Items() {
         </button>
       </div>
 
-      {filterData.length > 0 ? (
+      {isLoading ? (
+        <CircularProgress />
+      ) : filterData.length > 0 ? (
         <DataTable data={filterData} columns={columns} />
       ) : (
         <p className="text-lg text-white">No results found</p>
@@ -131,8 +111,8 @@ function Items() {
         }
         open={createModalOpen}
         onClose={() => setCreateModalOpen(false)}
-        onSuccess={handleCreateConfirm}
-        btnText="Create"
+        onSuccess={createItemMutation}
+        btnEl={isCreateLoading ? <CircularProgress /> : "Create"}
       />
     </div>
   );

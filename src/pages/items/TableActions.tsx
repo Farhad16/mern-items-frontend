@@ -1,14 +1,19 @@
 // TableActions.js
 import { Button, Typography } from "@mui/material";
+import CircularProgress from "@mui/material/CircularProgress";
 import { useState } from "react";
-import { toast } from "react-toastify";
-import { deleteItem, updateItem } from "../../apis/items.api";
 import { useAuth } from "../../components/auth/AuthContext";
-import { simplifyError } from "../../utils/error.util";
+import {
+  useItemDeleteMutation,
+  useItemListQuery,
+  useItemUpdateMutation,
+} from "../../queries/item.queries";
 import ReusableModal from "./ReusableModal";
 
 const TableActions = ({ row }: any) => {
   const { user } = useAuth();
+  const created_by = user?.email || " ";
+  const { refetch } = useItemListQuery();
 
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [editModalOpen, setEditModalOpen] = useState(false);
@@ -22,50 +27,30 @@ const TableActions = ({ row }: any) => {
     setEditModalOpen(true);
   };
 
-  const handleDeleteConfirm = async () => {
-    try {
-      const created_by = user?.email || " ";
-      await deleteItem(row.original._id, created_by);
-      toast.success("Item deleted successfully", {
-        position: "top-right",
-        autoClose: 2000,
-      });
-    } catch (error) {
-      const errorMessage = simplifyError(error);
-      toast.error(errorMessage, {
-        position: "top-right",
-        autoClose: 2000,
-      });
-    } finally {
-      setDeleteModalOpen(false);
+  const { deleteItemMutation, isLoading } = useItemDeleteMutation(
+    row.original._id,
+    created_by,
+    {
+      onSuccess: () => {
+        setDeleteModalOpen(false);
+        refetch();
+      },
     }
-  };
+  );
 
-  const handleEditConfirm = async () => {
-    try {
-      const editedData = {
-        name: editedName,
-        created_by: user?.email || "",
-      };
-
-      const updatedItem = await updateItem(row.original._id, editedData);
-
-      if (updatedItem) {
-        toast.success("Item created successfully", {
-          position: "top-right",
-          autoClose: 2000,
-        });
-      }
-    } catch (err) {
-      const error = simplifyError(err);
-      toast.error(error, {
-        position: "top-right",
-        autoClose: 2000,
-      });
-    } finally {
-      setEditModalOpen(false);
+  const { updateItemMutation, updateLoading } = useItemUpdateMutation(
+    row.original._id,
+    {
+      created_by,
+      name: editedName,
+    },
+    {
+      onSuccess: () => {
+        setEditModalOpen(false);
+        refetch();
+      },
     }
-  };
+  );
 
   return (
     <>
@@ -94,8 +79,14 @@ const TableActions = ({ row }: any) => {
         content={<Typography>Do you want to delete?</Typography>}
         open={deleteModalOpen}
         onClose={() => setDeleteModalOpen(false)}
-        onSuccess={handleDeleteConfirm}
-        btnText="Delete"
+        onSuccess={deleteItemMutation}
+        btnEl={
+          isLoading ? (
+            <CircularProgress className="!text-white !w-6 !h-6" />
+          ) : (
+            "Delete"
+          )
+        }
       />
 
       {/* Edit Modal */}
@@ -120,8 +111,14 @@ const TableActions = ({ row }: any) => {
         }
         open={editModalOpen}
         onClose={() => setEditModalOpen(false)}
-        onSuccess={handleEditConfirm}
-        btnText="Edit"
+        onSuccess={updateItemMutation}
+        btnEl={
+          updateLoading ? (
+            <CircularProgress className="!text-white !w-6 !h-6" />
+          ) : (
+            "Edit"
+          )
+        }
       />
     </>
   );
