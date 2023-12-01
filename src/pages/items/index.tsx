@@ -64,9 +64,9 @@ function Items() {
   }, [searchKey, itemData]);
 
   return (
-    <div className="w-full overflow-hidden py-8 flex flex-col gap-4 items-center">
-      <div className="flex items-center justify-between gap-4 w-full">
-        <div className="relative w-1/2">
+    <div className="w-full overflow-hidden py-8 flex flex-col gap-4 items-center justify-start">
+      <div className="flex justify-between gap-4 w-full">
+        <div className="w-1/2">
           <input
             type="text"
             onChange={handleChange}
@@ -85,11 +85,13 @@ function Items() {
       </div>
 
       {isLoading ? (
-        <CircularProgress />
+        <CircularProgress className="absolute top-[50%]" />
       ) : filterData.length > 0 ? (
         <DataTable data={filterData} columns={columns} />
       ) : (
-        <p className="text-lg text-white">No results found</p>
+        <p className="text-lg text-white absolute top-[50%]">
+          No results found
+        </p>
       )}
       <ReusableModal
         title="Create new item"
