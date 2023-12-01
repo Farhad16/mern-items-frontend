@@ -1,7 +1,7 @@
 // ReusableModal.js
 import CloseIcon from "@mui/icons-material/Close";
 import { Button, IconButton, Modal, Typography } from "@mui/material";
-import { ReactNode } from "react";
+import { ReactNode, useMemo } from "react";
 
 const ReusableModal = ({
   title,
@@ -10,6 +10,7 @@ const ReusableModal = ({
   onClose,
   onSuccess,
   btnEl,
+  disabled,
 }: {
   title: string;
   content: ReactNode;
@@ -17,7 +18,12 @@ const ReusableModal = ({
   onClose: () => void;
   onSuccess: () => void;
   btnEl: ReactNode;
+  disabled?: boolean;
 }) => {
+  const isDisable = useMemo(() => {
+    return Boolean(disabled);
+  }, [disabled]);
+
   return (
     <Modal
       open={open}
@@ -46,6 +52,7 @@ const ReusableModal = ({
             variant="contained"
             color="primary"
             className="!min-w-[90px] !min-h-[32px]"
+            disabled={isDisable}
           >
             {btnEl}
           </Button>

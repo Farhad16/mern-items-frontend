@@ -18,6 +18,7 @@ const TableActions = ({ row }: any) => {
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [editModalOpen, setEditModalOpen] = useState(false);
   const [editedName, setEditedName] = useState(row.name);
+  const [error, setError] = useState("");
 
   const handleDeleteClick = () => {
     setDeleteModalOpen(true);
@@ -25,6 +26,19 @@ const TableActions = ({ row }: any) => {
 
   const handleEditClick = () => {
     setEditModalOpen(true);
+  };
+
+  const handleInputChange = (e: any) => {
+    const value = e.target.value;
+    setEditedName(value);
+
+    if (value.trim() === "") {
+      setError("Item name is required");
+    } else if (value.length < 4) {
+      setError("Item name cannot be less than 4 characters");
+    } else {
+      setError("");
+    }
   };
 
   const { deleteItemMutation, isLoading } = useItemDeleteMutation(
@@ -101,17 +115,23 @@ const TableActions = ({ row }: any) => {
               Item name
             </label>
             <input
+              required
               type="text"
               id="name"
               defaultValue={row.original.name}
-              onChange={(e) => setEditedName(e.target.value)}
+              onChange={handleInputChange}
               className="mt-2 w-full px-4 py-3 border rounded-md border-gray-300 focus:outline-none focus:ring-1 focus:border-blue-300"
             />
+            {error && <p className="text-sm text-red-400">{error}</p>}
           </>
         }
         open={editModalOpen}
-        onClose={() => setEditModalOpen(false)}
+        onClose={() => {
+          setEditModalOpen(false);
+          setError("");
+        }}
         onSuccess={updateItemMutation}
+        disabled={Boolean(error)}
         btnEl={
           updateLoading ? (
             <CircularProgress className="!text-white !w-6 !h-6" />

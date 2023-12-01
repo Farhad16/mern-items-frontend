@@ -15,6 +15,7 @@ function Items() {
   const [searchKey, setSearchKey] = useState("");
   const [itemName, setItemName] = useState("");
   const [createModalOpen, setCreateModalOpen] = useState(false);
+  const [error, setError] = useState("");
 
   const { data: itemData, isLoading, refetch } = useItemListQuery();
 
@@ -32,6 +33,19 @@ function Items() {
       navigate("/login");
     } else {
       setCreateModalOpen(true);
+    }
+  };
+
+  const handleInputChange = (e: any) => {
+    const value = e.target.value;
+    setItemName(value);
+
+    if (value.trim() === "") {
+      setError("Item name is required");
+    } else if (value.length < 4) {
+      setError("Item name cannot be less than 4 characters");
+    } else {
+      setError("");
     }
   };
 
@@ -66,7 +80,7 @@ function Items() {
   return (
     <div className="w-full overflow-hidden py-8 flex flex-col gap-4 items-center justify-start">
       <div className="flex justify-between gap-4 w-full">
-        <div className="w-1/2">
+        <div className="relative w-1/2">
           <input
             type="text"
             onChange={handleChange}
@@ -106,13 +120,19 @@ function Items() {
             <input
               type="text"
               id="name"
-              onChange={(e) => setItemName(e.target.value)}
+              defaultValue=""
+              onChange={handleInputChange}
               className="mt-2 w-full px-4 py-3 border rounded-md border-gray-300 focus:outline-none focus:ring-1 focus:border-blue-300"
             />
+            {error && <p className="text-sm text-red-400">{error}</p>}
           </>
         }
         open={createModalOpen}
-        onClose={() => setCreateModalOpen(false)}
+        onClose={() => {
+          setCreateModalOpen(false);
+          setError("");
+        }}
+        disabled={!itemName || Boolean(error)}
         onSuccess={createItemMutation}
         btnEl={isCreateLoading ? <CircularProgress /> : "Create"}
       />
