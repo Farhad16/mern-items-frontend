@@ -1,6 +1,11 @@
 import axios from "axios";
 
-const API_BASE_URL = "http://localhost:4200/api/items" || "https://mern-shopping-8xpr.onrender.com/api/items";
+// Will replace it by .env
+const isLocal = window.location.hostname === "localhost";
+
+const API_BASE_URL = isLocal
+  ? "http://localhost:4200/api/items"
+  : "https://mern-shopping-8xpr.onrender.com/api/items";
 
 interface IItem {
   name: string;

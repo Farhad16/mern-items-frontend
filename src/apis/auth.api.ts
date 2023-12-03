@@ -1,6 +1,10 @@
 import axios from "axios";
 
-const API_BASE_URL = "http://localhost:4200/api/auth" || "https://mern-shopping-8xpr.onrender.com/api/auth";
+// Will replace it by .env
+const isLocal = window.location.hostname === "localhost";
+const API_BASE_URL = isLocal
+  ? "http://localhost:4200/api/auth"
+  : "https://mern-shopping-8xpr.onrender.com/api/auth";
 
 export const registerUser = async (userData: any) => {
   try {
